@@ -78,7 +78,7 @@ fun PleosCard(
 /**
  * Page navigation(PAGENAV) — 앱 상단 바.
  * - [onBack]이 없으면 Main 타입(최상위 화면): Back 버튼을 그리지 않고, 시스템 Back은 MainActivity의
- *   `moveTaskToBack(true)`가 받는다(pleos-platform.md 0장).
+ *   `moveTaskToBack(true)`가 받는다(Pleos 차량 앱 개발 가이드).
  * - [onBack]이 있으면 Depth 타입(하위 화면): 왼쪽 Back 버튼 + 시스템 Back도 [onBack]으로 보낸다([BackHandler]).
  * - [actions]는 오른쪽 Suffix 영역(아이콘 버튼 1~2개 권장). 드롭다운 메뉴는 두지 않는다.
  * - window bar(시스템 UI)와 겹치지 않게 위쪽 여백을 둔다(BAR, 앱 상단 가장자리에 중요한 버튼을 붙이지 않음).
@@ -131,7 +131,7 @@ fun PageNavigation(
 /**
  * Tabs(TABS) Box 타입, Fitted(너비 균등). 화면 안 2~4개 보기 전환용(팀 판단: 라벨이 잘리지 않는 4개 이하).
  * 선택 표시는 바탕색 + 굵은 글자로 함께 바꿔 색만으로 구분하지 않는다. 전환 애니메이션은 없다.
- * 선택 바탕 button_switch_enabled는 문서에 연결 표기가 없어 추정이다(pleos-components.md 5.1 Toggle).
+ * 선택 바탕 button_switch_enabled는 문서에 연결 표기가 없어 추정이다(Pleos UI 디자인 가이드).
  */
 @Composable
 fun PleosTabs(
@@ -183,7 +183,7 @@ fun PleosTabs(
 }
 
 /**
- * portrait(window 1개)·landscape(window 2개) 배치(pleos-ui.md 3·10장).
+ * portrait(window 1개)·landscape(window 2개) 배치(Pleos UI 디자인 가이드).
  * - 가로가 세로보다 길면 landscape로 보고 [primary](핵심)·[secondary](부가 정보)를 2단으로 나란히 놓는다.
  * - portrait에서는 [primary]만 그린다. [secondaryInPortrait]가 true면 아래에 이어 붙인다.
  * - [scrollable]이면 이 컴포넌트가 직접 수동 스크롤을 단다: landscape는 단마다, portrait는 두 단을 합친 하나의 열에.
@@ -220,7 +220,7 @@ fun AdaptivePanes(
 }
 
 /**
- * 운전 중에 막아야 하는 영역(키보드 입력·설정·긴 목록·영상)을 감싼다(pleos-dev.md 2.4장).
+ * 운전 중에 막아야 하는 영역(키보드 입력·설정·긴 목록·영상)을 감싼다(Pleos 차량 앱 개발 가이드).
  * [blocked]가 참이면 [content] 대신 "주차 후 이용" 안내 한 줄을 보인다. 기본값은 주행 규제 여부.
  * 키보드만 막을 때는 `blocked = LocalUxRestrictions.current.noKeyboard`처럼 플래그를 넘긴다.
  */

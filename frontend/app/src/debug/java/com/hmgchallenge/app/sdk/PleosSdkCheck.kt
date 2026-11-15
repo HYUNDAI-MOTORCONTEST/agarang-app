@@ -23,8 +23,8 @@ import ai.pleos.playground.tts.listener.OnInitializeListener as TtsInitListener
 /**
  * [debug 빌드 전용] Pleos SDK 4종(NaviHelper·FusedLocation·TTS·STT)이 이 기기에서 연결되는지 초기화만 해 본다.
  * release에는 같은 이름의 빈 구현(src/release)이 들어가 SDK 호출 코드가 제출 APK에 남지 않는다.
- * 기능 호출은 하지 않는다. 사용법·권한은 docs/guides/pleos-sdk.md.
- * - 공모전에서는 매니페스트 권한 선언만으로 쓸 수 있다(docs/contest/rules.md 1장).
+ * 기능 호출은 하지 않는다. 사용법·권한은 Pleos SDK 레퍼런스.
+ * - 공모전에서는 매니페스트 권한 선언만으로 쓸 수 있다(공모전 안내).
  * - TTS·STT는 클라이언트 ID·시크릿이 필요 없는 ON_DEVICE 모드로 확인한다.
  * - 콜백이 오지 않는 SDK가 있어 TIMEOUT_MS 뒤에는 "응답 없음"으로 표시한다.
  */
@@ -53,7 +53,7 @@ class PleosSdkCheck(private val context: Context, private val scope: CoroutineSc
             if (!fused.isSupported()) {
                 set(PleosSdk.LOCATION, SdkState.Failed("이 차량에서 지원하지 않음"))
             } else {
-                // FusedLocation.initialize()는 결과 콜백이 없다(pleos-sdk.md). 호출까지만 확인하고 "연결됨"으로 표시하지 않는다.
+                // FusedLocation.initialize()는 결과 콜백이 없다(Pleos SDK 레퍼런스). 호출까지만 확인하고 "연결됨"으로 표시하지 않는다.
                 fused.initialize()
                 set(PleosSdk.LOCATION, SdkState.Initialized)
             }

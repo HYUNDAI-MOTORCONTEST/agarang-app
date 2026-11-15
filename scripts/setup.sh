@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 개발환경 점검·세팅 (멱등, macOS·Linux). Claude Code·Codex의 SessionStart 훅이 기본 모드로 실행한다.
+# 개발환경 점검·세팅 (멱등, macOS·Linux). Android Studio·IntelliJ의 Gradle 동기화(devSetup)가 기본 모드로 실행한다.
 #
 # 사용법: scripts/setup.sh [--check | --install | --create-avd] [-h]
 #   (기본)        빠른 점검(수 초) + local.properties 생성 + 에뮬레이터·백엔드 백그라운드 자동 기동.
@@ -291,42 +291,11 @@ else
   fail "gradlew 없음"
 fi
 
-# ---- 8. Context7 MCP ----
-mcp_claude="없음"
-if grep -q '"context7"' "$REPO_ROOT/.mcp.json" 2>/dev/null; then
-  mcp_claude=".mcp.json"
-  grep -q '"enabledMcpjsonServers"' "$REPO_ROOT/.claude/settings.json" 2>/dev/null && mcp_claude=".mcp.json(자동 승인: 폴더 신뢰 후)"
-fi
-mcp_codex="없음"
-grep -q '^\[mcp_servers\.context7\]' "$REPO_ROOT/.codex/config.toml" 2>/dev/null && mcp_codex=".codex/config.toml"
-codex_note=""
-if command -v codex >/dev/null 2>&1; then
-  codex_cfg="${CODEX_HOME:-$HOME/.codex}/config.toml"
-  trusted="$(awk -v hdr="[projects.\"$REPO_ROOT\"]" '
-    index($0, hdr) == 1 { inside = 1; next }
-    /^\[/ { inside = 0 }
-    inside && $0 ~ /trust_level *= *"trusted"/ { print "yes" }
-  ' "$codex_cfg" 2>/dev/null)"
-  if [[ "$trusted" == "yes" ]]; then
-    codex_note=", Codex 프로젝트 신뢰됨"
-  else
-    codex_note=", Codex 프로젝트 미신뢰"
-  fi
-else
-  codex_note=", codex CLI 없음"
-fi
-key_note="키 없음(무료 한도)"
-[[ -n "${CONTEXT7_API_KEY:-}" ]] && key_note="CONTEXT7_API_KEY 설정됨"
-if [[ "$mcp_claude" != "없음" && "$mcp_codex" != "없음" ]]; then
-  if [[ "$codex_note" == ", Codex 프로젝트 미신뢰" ]]; then
-    warn "Context7 MCP — Claude: $mcp_claude / Codex: $mcp_codex$codex_note, $key_note"
-    todo "Codex: 이 폴더에서 codex를 실행해 프로젝트를 신뢰(trust)하고 /hooks에서 SessionStart 훅을 검토·신뢰하세요. 그래야 .codex/config.toml의 MCP·훅이 로드됩니다."
-  else
-    ok "Context7 MCP — Claude: $mcp_claude / Codex: $mcp_codex$codex_note, $key_note"
-  fi
-else
-  warn "Context7 MCP 설정 누락 — Claude: $mcp_claude / Codex: $mcp_codex"
-fi
+# ---- 8. 저장소별 추가 점검(있을 때만) ----
+EXTRA_SETUP="$REPO_ROOT/internal/setup-extra.sh"
+# shellcheck source=/dev/null
+[[ -f "$EXTRA_SETUP" ]] && source "$EXTRA_SETUP"
+declare -F extra_checks >/dev/null && extra_checks
 
 # ---- 9. 자동 기동 (기본·--install 모드) ----
 AUTOSTART=1
@@ -419,16 +388,7 @@ fi
 
 [[ -d "$LOCK" ]] && rmdir "$LOCK" 2>/dev/null
 
-# ---- 에이전트 셸 환경 (Claude Code SessionStart 전용) ----
-if [[ -n "${CLAUDE_ENV_FILE:-}" ]]; then
-  {
-    [[ -n "$JAVA_FOUND" ]] && printf 'export JAVA_HOME=%q\n' "$JAVA_FOUND"
-    if [[ -n "$SDK" ]]; then
-      printf 'export ANDROID_HOME=%q\n' "$SDK"
-      printf 'export PATH=%q:%q:"$PATH"\n' "$SDK/platform-tools" "$SDK/emulator"
-    fi
-  } >>"$CLAUDE_ENV_FILE" 2>/dev/null
-fi
+declare -F extra_env >/dev/null && extra_env
 
 # ---- 요약 출력 ----
 END_TS="$(perl -MTime::HiRes=time -e 'printf "%.3f", time' 2>/dev/null || date +%s)"
@@ -443,7 +403,7 @@ SUMMARY="$(
   echo "[개발환경 점검] scripts/setup.sh ($mode_label 모드, ${ELAPSED}초) — ❌ ${N_FAIL}개, ⚠️ ${N_WARN}개"
   printf '%s\n' "${LINES[@]}"
   if [[ ${#TODOS[@]} -gt 0 ]]; then
-    echo "사람이 할 일 (설치·라이선스 동의는 에이전트가 대신하지 않음):"
+    echo "사람이 할 일 (설치·라이선스 동의는 자동으로 하지 않음):"
     i=1
     for t in "${TODOS[@]}"; do
       echo "  $i. $t"

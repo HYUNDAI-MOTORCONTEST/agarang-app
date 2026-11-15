@@ -80,7 +80,7 @@ fun ForecastBadge(level: ForecastLevel, modifier: Modifier = Modifier, label: St
 
 /**
  * 주행 중 한 줄 안내(F4 울음 대응·F3 케어 모드). 예: "수유 임박 · 다음 휴게소 약 6분" + [경유지 추가].
- * - 문장은 한 줄(한국어 40자 안팎 권장, pleos-ui.md 7장)이고 LIMIT_STRING_LENGTH면 플랫폼 길이로 자른다.
+ * - 문장은 한 줄(한국어 40자 안팎 권장, Pleos UI 디자인 가이드)이고 LIMIT_STRING_LENGTH면 플랫폼 길이로 자른다.
  * - 핵심 정보라 32sp(titleSmall)로 그린다. 버튼은 1개만(운전 중 조작 단순화).
  * - 왼쪽 막대 색은 [level]이고, 단계 이름은 [ForecastBadge]로 함께 보인다. 내용이 바뀌면 화면 읽기에 알린다.
  * - 그림자 Level 2(떠 있는 패널, 팀 판단).

@@ -202,7 +202,7 @@ fun PleosToggleButton(
 
 /**
  * Stepper(CTRL). 범위가 정해진 값(분유 ml, 기저귀 장수, 공조 온도 단계)을 버튼으로 바꾼다.
- * 주행 중 기본 조작은 슬라이더 드래그 대신 이 버튼이다(팀 판단, pleos-components.md 5.3).
+ * 주행 중 기본 조작은 슬라이더 드래그 대신 이 버튼이다(팀 판단, Pleos UI 디자인 가이드).
  * 끝값에 닿으면 그 방향 버튼을 Disabled로 한다. 값이 바뀌면 화면 읽기에 바로 알린다(liveRegion).
  */
 @Composable

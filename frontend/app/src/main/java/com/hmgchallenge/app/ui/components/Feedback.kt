@@ -103,7 +103,7 @@ fun BoxScope.PleosToastHost(state: PleosToastState, modifier: Modifier = Modifie
  * System popup(POPUP). 확인이 꼭 필요한 순간에만 쓴다(예: 경유지 추가 확인, 기록 삭제).
  * - 바탕 background_popup + 그림자 Level 3, 제목 1줄·설명 3줄 이하.
  * - 버튼 2개면 가로(Horizontal), [verticalButtons]면 세로. 확인 버튼이 오른쪽(가로)·위(세로).
- * - 시스템 Back과 바깥 터치는 [onDismiss]로 간다(팝업이 Back을 먼저 받는다, pleos-platform.md 0장).
+ * - 시스템 Back과 바깥 터치는 [onDismiss]로 간다(팝업이 Back을 먼저 받는다, Pleos 차량 앱 개발 가이드).
  */
 @Composable
 fun PleosPopup(

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Pleos Connect 에뮬레이터를 Cold boot로 백그라운드 실행한다.
-# Cold boot 필수: quick boot(스냅샷)로 띄우면 VHAL을 쓸 수 없다(docs/guides/pleos-dev.md 6장).
+# Cold boot 필수: quick boot(스냅샷)로 띄우면 VHAL을 쓸 수 없다(Pleos 차량 앱 개발 가이드, 에뮬레이터).
 #
 # 사용법: scripts/pleos-emu.sh [--wait] [emulator 추가 인자...]
 #   --wait          부팅 완료(sys.boot_completed=1)까지 기다린다

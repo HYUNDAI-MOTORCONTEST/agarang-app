@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Pleos Back 정책(docs/guides/pleos-platform.md 9장): 최상위 화면에서 Back이 오면 앱을 끝내지 않고 숨긴다.
+        // Pleos Back 정책(Pleos 차량 앱 개발 가이드, CCP·Back): 최상위 화면에서 Back이 오면 앱을 끝내지 않고 숨긴다.
         // CareScreen의 프로필·기록 상세 BackHandler가 먼저 받고, 최상위에서만 이 콜백으로 숨긴다.
         onBackPressedDispatcher.addCallback(this) { moveTaskToBack(true) }
         setContent {
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
 }
 
 /**
- * 운전 중 제한 처리 (근거: docs/guides/pleos-dev.md 2.2·2.4·3장, docs/guides/pleos-ui.md 1·10장)
+ * 운전 중 제한 처리 (근거: Pleos 차량 앱 개발 가이드의 주행 규제·주의 분산, Pleos UI 디자인 가이드의 기본 원칙)
  * - 주행 규제 중(`isRequiresDistractionOptimization`)이면 상세 정보(출처·버전·시각)를 숨기고 핵심 값만 보인다
  *   ("한눈에 보기", 핵심 정보만). 로딩 스피너 같은 움직이는 그래픽은 정적 텍스트로 바꾼다(동영상·애니메이션 금지).
  * - LIMIT_STRING_LENGTH가 오면 플랫폼이 준 길이로 자르고, 메시지는 2줄 이하로 줄인다.

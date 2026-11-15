@@ -25,7 +25,7 @@ captures/
 keystore.properties
 
 # ---- IntelliJ / Android Studio ----
-# .idea/는 PC마다 달라 전부 제외한다. 공유 실행 구성은 루트 .run/*.run.xml에 둔다(커밋 대상).
+# .idea/는 PC마다 달라 전부 제외한다.
 .idea/
 *.iml
 *.ipr
@@ -42,8 +42,8 @@ out/
 .env*
 !.env.example
 
-# ---- Claude Code 개인 설정 (프로젝트 공용 설정·스킬·.mcp.json은 커밋) ----
-.claude/settings.local.json
+# ---- 도구별 개인 설정 ----
+*.local.json
 
 # ---- OS / 기타 ----
 .DS_Store

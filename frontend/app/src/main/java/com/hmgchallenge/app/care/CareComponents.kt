@@ -96,7 +96,7 @@ internal fun CareCard(
 }
 
 /** Same Pleos token pairs and contrast as PleosRoles. No ripple or animated transitions while driving.
- * Pressed content shrinks to 95% per pleos-components.md; the outer touch target keeps its full size.
+ * Pressed content shrinks to 95% per the Pleos UI design guide; the outer touch target keeps its full size.
  * 72dp actions / 64dp minimum width: Pleos has no numeric minimum; Google car-app-quality UX-1 is supplementary.
  */
 @Composable
