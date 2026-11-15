@@ -11,7 +11,7 @@
 
 ### 2.1 APK 설치·실행
 
-Pleos Connect 에뮬레이터를 켠 뒤 설치합니다. 서버 없이 동작합니다.
+Pleos Connect 에뮬레이터(4장)를 켠 뒤 설치합니다. 서버 없이 동작합니다. APK는 저장소의 `apk/` 폴더에 있고, [바로 받기](https://github.com/HYUNDAI-MOTORCONTEST/agarang/raw/main/apk/%EC%95%84%EA%B0%80%EB%9E%91_%EC%95%84%EA%B0%80%EB%9E%91_release.apk)로도 내려받을 수 있습니다.
 
 ```bash
 adb install -r apk/아가랑_아가랑_release.apk
@@ -46,8 +46,7 @@ Android Studio로 저장소를 열어 `frontend/app`을 실행하거나, 명령�
 
 | 항목 | 값 |
 | --- | --- |
-| 에뮬레이터 | Pleos Connect Emulator v2.1.0 (API 34, Automotive, **Cold boot**) — [설치 안내](https://document.pleos.ai/docs/connect/guide/getting-started/application-development/setup-connect-sdk-emulator) |
-| 화면 | 2560×1440, density 160. 가로(window 2개)·세로(window 1개) 모두 지원 |
+| 에뮬레이터·화면 | 4장 참고 |
 | 앱 | minSdk 28 / targetSdk 36, Kotlin + Jetpack Compose |
 | Pleos SDK | Vehicle SDK 2.3.2, NaviHelper SDK 3.0.5 |
 | 권한 | `pleos.car.permission.CAR_ENERGY`, `NAVI_ROUTE`, `NAVI_ROUTE_SEARCH` |
@@ -59,9 +58,20 @@ Android Studio로 저장소를 열어 `frontend/app`을 실행하거나, 명령�
 3. 주행 상태는 에뮬레이터 Virtual Console에서 기어 D와 속도를 주어 바꿉니다(`scripts/pleos-console.sh`).
 4. 주간/야간 테마는 시스템 야간 모드를 따릅니다: `adb shell cmd uimode night yes|no`.
 
-## 4. APK 파일 위치 또는 GitHub Release 링크
+## 4. 개발에 사용한 Pleos Connect 에뮬레이터 버전과 화면 규격
 
-- [`apk/아가랑_아가랑_release.apk`](apk/아가랑_아가랑_release.apk) (release 빌드, v2·v3 서명, 약 49MB)
+| 항목 | 값 |
+| --- | --- |
+| 에뮬레이터 | Pleos Connect Emulator **v2.1.0** (빌드 `release_connect_v2.1.0`) — [설치 안내](https://document.pleos.ai/docs/connect/guide/getting-started/application-development/setup-connect-sdk-emulator) |
+| 시스템 이미지 | Android 14 (API 34) Automotive, `pleos_car_emulator` arm64-v8a |
+| 기기 정의 | `Pleos_Connect_v2_0`, RAM 4096MB, **Cold boot** |
+| 화면 규격 | **2560×1440, density 160** |
+| 화면 방향 | 가로(landscape, window 2개)·세로(portrait, window 1개) 모두 지원. window 크기를 바꿔도 맞춰 배치됩니다 |
+
+## 5. APK 파일 위치 또는 GitHub Release 링크
+
+- [`apk/아가랑_아가랑_release.apk`](apk/아가랑_아가랑_release.apk) (release 빌드, v2·v3 서명, 약 49MB) — [바로 받기](https://github.com/HYUNDAI-MOTORCONTEST/agarang/raw/main/apk/%EC%95%84%EA%B0%80%EB%9E%91_%EC%95%84%EA%B0%80%EB%9E%91_release.apk)
+- 파일이 GitHub 업로드 한도 안이라 Releases는 쓰지 않았습니다. GitHub 웹 화면은 큰 파일을 미리 보여 주지 않으므로 위 바로 받기 링크를 쓰세요.
 - 커밋 `5d42752` 시점의 최신 `main` 소스로 빌드했습니다(서버 없이 내장 시설 데이터로 동작).
 
 ---
