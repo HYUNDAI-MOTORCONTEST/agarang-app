@@ -43,17 +43,20 @@ internal fun CareActionTile(
     stacked: Boolean = false,
     tag: String,
     selectionRole: Role = Role.RadioButton,
+    primary: Boolean = false,
+    /** 주행 중 유일한 주요 조작처럼 크게 보여야 할 때. 높이와 제목 글자를 키운다. */
+    large: Boolean = false,
 ) {
     val dimens = PleosTheme.dimens
     val shapes = PleosTheme.shapes
     val interaction = remember { MutableInteractionSource() }
     val pressed by interaction.collectIsPressedAsState()
-    val style = PleosTheme.colors.resolveButtonStyle(enabled = enabled, primary = false, selected = selected, pressed = pressed)
+    val style = PleosTheme.colors.resolveButtonStyle(enabled = enabled, primary = primary, selected = selected, pressed = pressed)
     val input = if (selected != null) Modifier.selectable(selected, interactionSource = interaction, indication = null,
         enabled = enabled, role = selectionRole, onClick = onClick)
         else Modifier.clickable(interactionSource = interaction, indication = null, enabled = enabled, role = Role.Button, onClick = onClick)
     val surface = modifier
-        .heightIn(min = if (stacked) dimens.actionChoiceHeight else dimens.actionTileHeight)
+        .heightIn(min = when { large -> dimens.drivingActionHeight; stacked -> dimens.actionChoiceHeight; else -> dimens.actionTileHeight })
         .testTag(tag)
         .then(input)
         .graphicsLayer {
@@ -65,7 +68,7 @@ internal fun CareActionTile(
         .border(if (selected == true) dimens.borderMedium else dimens.borderThin, style.border ?: style.content, shapes.container)
         .padding(dimens.cardPaddingCompact)
     val text: @Composable () -> Unit = {
-        Text(LocalUxRestrictions.current.limit(title), style = PleosTheme.typography.titleSmall,
+        Text(LocalUxRestrictions.current.limit(title), style = if (large) PleosTheme.typography.titleLarge else PleosTheme.typography.titleSmall,
             color = style.content, maxLines = 2, overflow = TextOverflow.Ellipsis)
         Text(LocalUxRestrictions.current.limit(detail), style = PleosTheme.typography.labelMedium,
             color = style.content, maxLines = 2, overflow = TextOverflow.Ellipsis)
