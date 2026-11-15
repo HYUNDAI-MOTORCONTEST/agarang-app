@@ -61,8 +61,8 @@ Android Studio로 저장소를 열어 `frontend/app`을 실행하거나, 명령�
 
 ## 4. APK 파일 위치 또는 GitHub Release 링크
 
-- [`apk/아가랑_아가랑_release.apk`](apk/아가랑_아가랑_release.apk) (release 빌드, 약 49MB)
-- 커밋 `5404fee` 시점의 소스로 빌드했습니다. 그 뒤 main에 들어간 UI 정리는 APK에 포함되지 않았습니다.
+- [`apk/아가랑_아가랑_release.apk`](apk/아가랑_아가랑_release.apk) (release 빌드, v2·v3 서명, 약 49MB)
+- 커밋 `5d42752` 시점의 최신 `main` 소스로 빌드했습니다(서버 없이 내장 시설 데이터로 동작).
 
 ---
 
