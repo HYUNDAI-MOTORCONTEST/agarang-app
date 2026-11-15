@@ -3,7 +3,10 @@ package com.hmgchallenge.shared.forecast
 /**
  * General context only. A completed month cannot distinguish the first days from later weeks,
  * nor identify milk feeding method. Feeding ranges therefore never produce a personal due time.
- * CDC sources and the explicit age-band assumptions are recorded in docs/agarang/forecast.md.
+ * Sources (CDC feeding frequency):
+ * https://www.cdc.gov/infant-toddler-nutrition/breastfeeding/how-much-and-how-often.html
+ * https://www.cdc.gov/infant-toddler-nutrition/formula-feeding/how-much-and-how-often.html
+ * The age-band assumptions are the explicit constants below.
  */
 object AgeReferenceModel {
     const val VERSION = "public-context-2026-11-v1"

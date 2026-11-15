@@ -66,7 +66,7 @@ class PleosNavigationClient(
             // API Reference: remainTime is a duration in SECONDS; remainDistance is METERS.
             // Preserve geographic latitude/longitude, not optional map-display coordinates.
             // These fields alone do not verify a facility entrance or current-route access.
-            // docs/agarang/navigation.md links the exact DestinationInfo API Reference.
+            // DestinationInfo API Reference: https://document.pleos.ai/docs/pleos-only/connect-sdk-pleos/NaviHelper/navi-helper/ai.pleos.playground.navi.data/destination-info/entry
             onDestination(NavigationDestination(
                 key = "${destinationInfo.poiId}:${destinationInfo.latitude}:${destinationInfo.longitude}",
                 label = destinationInfo.name,

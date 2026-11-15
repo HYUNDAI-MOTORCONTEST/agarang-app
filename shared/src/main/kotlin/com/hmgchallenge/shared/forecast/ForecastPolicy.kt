@@ -1,6 +1,6 @@
 package com.hmgchallenge.shared.forecast
 
-/** Product heuristics, not pediatric thresholds. See docs/agarang/forecast.md for scope and provenance. */
+/** Product heuristics for trip planning, not pediatric thresholds. Public references are listed in README "참고 문서". */
 data class ForecastPolicy(
     val version: String = "planning-policy-v1",
     val cautionMinutes: Int = 60,
