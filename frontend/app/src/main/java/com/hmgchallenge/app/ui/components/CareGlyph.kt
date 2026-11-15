@@ -30,7 +30,7 @@ internal enum class CareSymbol(@param:DrawableRes val outlined: Int, @param:Draw
     BACK(R.drawable.ic_back, R.drawable.ic_back),
 }
 
-/** Original artwork traced to transparent vectors on the Pleos 48dp grid (docs/agarang/icons.md).
+/** Original artwork traced to transparent vectors on the Pleos 48dp grid.
  * Selection uses the filled variant. The adjacent label and parent control expose meaning/state,
  * so the icon stays decorative: https://developer.android.com/develop/ui/compose/resources
  */

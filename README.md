@@ -1,12 +1,19 @@
 # 아가랑
 
-> 현대자동차그룹 차량용 앱 개발 공모전 출품용 Pleos Connect(Android Automotive OS) 앱 모노레포.
-> 팀명·앱 이름: 아가랑. 개인 실명·계정 정보는 이 저장소에 넣지 않습니다(공모전 익명성 규정).
+> 현대자동차그룹 차량용 앱 개발 공모전 출품작. Pleos Connect(Android Automotive OS)용 Kotlin 앱입니다.
 
 ## 1. 앱 이름 및 한 줄 소개
 
 - **앱 이름**: 아가랑
 - **한 줄 소개**: 아기가 울기 전에 알려주는 패밀리카 케어 코파일럿 — 아기 상태 예보로 출발과 정차를 설계합니다
+
+주요 기능
+
+- **출발 예보**: 돌봄 기록과 내비 도착 예정 시각으로 다음 수유·돌봄이 도착 전에 겹치는지 예보하고(여유·주의·임박), 출발 방법(지금 출발·돌봄 먼저·중간 정차) 하나를 추천합니다.
+- **준비물**: 외출 시간에 맞춘 수유용품·기저귀 수량과 체크리스트.
+- **울음 대응**: 아기가 울 때 가까운 정차지와 수유실이 있는 시설을 보여 주고, 고른 곳을 내비 경유지로 등록합니다(울음 원인은 단정하지 않음).
+- **원탭 돌봄 기록**: 수유·기저귀·수면을 한 번에 기록하고 바로 취소할 수 있습니다.
+- **운전 중 제한**: 주행 중에는 핵심 요약과 울음 대응 버튼만 크게 보이고, 입력·설정·긴 글은 주차 후로 미룹니다(CarUxRestrictions).
 
 ## 2. 실행 방법
 
@@ -18,84 +25,60 @@ adb install -r apk/아가랑_아가랑_release.apk    # 제출용 release APK �
 adb shell am start -n com.hmgchallenge.app/.MainActivity
 ```
 
-### 2.2 개발 환경 준비
+기록이 없는 첫 화면에서 바로 기능을 보려면 오른쪽 위 **더 보기**의 체험 메뉴를 씁니다(합성 데이터, 실제 기록·내비에는 반영하지 않음).
 
-처음 1회 사람이 할 일
+- **출발 준비 체험** → **기록 있는 여정**: 예보·추천·준비물이 채워진 홈. 이어서 **도착 90분 지연 보기**로 "주의" 단계와 중간 정차 추천을 봅니다.
+- **울음 대응 체험**: 임박 예보, 정차 후보 없음, 내비 실패 상황.
+- 끝내려면 **데모 끝내기**.
 
-1. **Android Studio 설치** 후 첫 실행 마법사(Standard)로 Android SDK를 받습니다. SDK Tools에서 **Android SDK Command-line Tools (latest)** 도 설치합니다.
-2. **Pleos 시스템 이미지 설치**(라이선스 동의가 필요해서 자동화하지 않음): Android Studio > SDK Manager > SDK Update Sites에 `Pleos Connect System Image`를 추가합니다.
+### 2.2 소스에서 빌드·실행
+
+처음 1회 준비
+
+1. **Android Studio**를 설치하고 SDK Tools에서 **Android SDK Command-line Tools (latest)** 를 설치합니다.
+2. **Pleos 시스템 이미지**: Android Studio > SDK Manager > SDK Update Sites에 `Pleos Connect System Image`를 추가하고, SDK Platforms(Show Package Details)에서 Android 34의 **Pleos Connect v2.1.0 APIs** 를 설치합니다(42dot 라이선스 동의 필요).
    - macOS(Apple Silicon): `https://nexus-playground.pleos.ai/repository/raw-releases/connect-avd/2.x/crp-arm64-sys-img.xml`
    - Windows·Linux(x86_64): `https://nexus-playground.pleos.ai/repository/raw-releases/connect-avd/2.x/crp-sys-img.xml`
-   - SDK Platforms에서 Show Package Details → Android 34의 **Pleos Connect v2.1.0 APIs** 를 체크하고, **42dot 라이선스(pleos-connect-sdk-license)를 직접 읽고 동의**합니다. 다운로드 약 4.7GB(arm64)·4.1GB(x86_64).
    - 원문 절차: https://document.pleos.ai/docs/connect/guide/getting-started/application-development/setup-connect-sdk-emulator
-3. 터미널에서 **`scripts/setup.sh --install`** 을 실행합니다. 빠진 SDK 패키지(platform-tools, emulator, `platforms;android-37.0`, build-tools)를 설치하고(라이선스 질문에 직접 답함), AVD `Pleos_Connect_v2.1.0`(RAM 4GB, Cold boot)을 만들고, Gradle 배포판을 받습니다.
+3. `scripts/setup.sh --install`: 빠진 SDK 패키지 설치, AVD `Pleos_Connect_v2.1.0`(RAM 4GB, Cold boot) 생성, `local.properties` 생성. 점검만 하려면 `scripts/setup.sh --check`.
 
-`scripts/setup.sh`(기본 모드)는 개발 환경을 점검하고 바로 쓸 수 있게 준비합니다(수 초, 실패해도 빌드는 계속됨).
-
-- JDK(Android Studio 내장 JBR 등)·Android SDK를 찾고 `local.properties`(`sdk.dir`)를 만듭니다.
-- SDK 패키지·Pleos 시스템 이미지·AVD·Gradle wrapper 상태를 ✅/⚠️/❌로 요약합니다. 빠진 것은 설치하지 않고 명령만 안내합니다.
-- 준비돼 있으면 에뮬레이터(Cold boot)와 백엔드(`:backend:bootRun`, 8081)를 백그라운드로 띄웁니다. 이미 실행 중이면 건너뜁니다.
-  로그는 `.dev/`(git 제외), 백엔드 중지는 `scripts/dev-down.sh`(에뮬레이터까지 끄려면 `--emu`). 자동 기동을 끄려면 `HMG_AUTOSTART=0`.
-- Android Studio·IntelliJ IDEA로 폴더를 열면 Gradle 동기화가 끝날 때마다 Gradle 태스크 `devSetup`이 같은 스크립트를 실행합니다(처음 열 때 **Trust Project** 필요). 끄려면 `~/.gradle/gradle.properties`에 `hmg.autostart=false`.
-
-점검만 하려면 `scripts/setup.sh --check`(파일 생성·자동 기동 없음).
-
-### 2.3 소스에서 실행
+빌드·실행
 
 ```bash
-# 1) 백엔드 서버 (포트 8081) — setup.sh 기본 모드가 이미 띄웠으면 건너뜀
-./gradlew :backend:bootRun
-curl http://localhost:8081/api/health
-
-# 2) 에뮬레이터 실행(Cold boot, 이미 실행 중이면 건너뜀) → 앱 빌드·설치·실행
-scripts/pleos-emu.sh --wait
-scripts/run-app.sh
+scripts/pleos-emu.sh --wait                    # 에뮬레이터 Cold boot(이미 실행 중이면 건너뜀)
+scripts/run-app.sh -Phmg.bundledData=true      # debug 빌드·설치·실행(서버 없이 내장 데이터 사용)
 ```
 
-debug 빌드는 에뮬레이터에서 호스트 PC의 백엔드에 `http://10.0.2.2:8081`으로 접속합니다(HTTP 평문은 debug 빌드에만 허용).
-
-8081 포트를 다른 프로세스가 쓰고 있으면 포트를 바꿔 실행합니다.
-
-```bash
-./gradlew :backend:bootRun --args='--server.port=9090'
-scripts/run-app.sh -Phmg.backendUrl=http://10.0.2.2:9090
-```
+- 서버를 함께 쓰려면 `./gradlew :backend:bootRun`(포트 8081)을 띄우고 `scripts/run-app.sh`로 실행합니다. debug 빌드는 에뮬레이터에서 `http://10.0.2.2:8081`로 접속합니다.
+- release APK: `./gradlew :frontend:app:assembleRelease`. 서명 환경변수 `HMG_RELEASE_STORE_FILE`·`HMG_RELEASE_STORE_PASSWORD`·`HMG_RELEASE_KEY_ALIAS`·`HMG_RELEASE_KEY_PASSWORD`가 모두 있을 때만 서명합니다. 서명 키는 저장소에 넣지 않습니다.
+- 스크립트는 bash(macOS·Linux)이고, JDK는 `JAVA_HOME`(17+) → Android Studio 내장 JBR 순으로 찾습니다.
+- Android Studio·IntelliJ로 열면 Gradle 동기화가 끝날 때 `scripts/setup.sh`가 실행되어 에뮬레이터·백엔드를 띄울 수 있습니다. 끄려면 `~/.gradle/gradle.properties`에 `hmg.autostart=false`를 넣습니다.
 
 ## 3. 테스트 환경 및 필요한 설정
 
 | 항목 | 값 |
 | --- | --- |
 | 에뮬레이터 | Pleos Connect Emulator v2.1.0 (AVD `Pleos_Connect_v2.1.0`, API 34, Automotive, Cold boot, RAM 4GB) |
-| 화면 규격 | 2560×1440, density 160 (공식 기기 프로필 `Pleos_Connect_v2_0`). 앱은 window 2개(가로, 약 1682×1210dp)·1개(세로, 약 841×1210dp) 모두 지원 |
+| 화면 규격 | 2560×1440, density 160 (공식 기기 프로필 `Pleos_Connect_v2_0`). window 2개(가로, 약 1682×1210dp)·1개(세로, 약 841×1210dp) 모두 지원 |
 | 앱 SDK | minSdk 28 / compileSdk 37 / targetSdk 36 |
-| Pleos SDK | Vehicle SDK `ai.pleos.playground:Vehicle:2.3.2`, NaviHelper SDK `ai.pleos.playground:NaviHelper:3.0.5` (Maven: `https://nexus-playground.pleos.ai/repository/maven-releases/`). 제출 앱이 쓰는 Pleos SDK는 이 2종이다 |
+| Pleos SDK | Vehicle SDK `ai.pleos.playground:Vehicle:2.3.2`, NaviHelper SDK `ai.pleos.playground:NaviHelper:3.0.5` (Maven: `https://nexus-playground.pleos.ai/repository/maven-releases/`) |
 | 사용 권한 | `pleos.car.permission.CAR_ENERGY`(배터리 잔량), `NAVI_ROUTE`(경로·ETA 조회), `NAVI_ROUTE_SEARCH`(정차지 경유지 등록). 운전 중 제한(CarUxRestrictions) 구독은 권한이 필요 없음 |
-| 차량 API | AAOS `android.car` (`useLibrary("android.car")`, Activity `distractionOptimized` 선언) |
-| 글꼴 | Asta Sans v1.000 (42dot, SIL OFL 1.1) 앱 내장 — 아래 "라이선스" 참고 |
-| JDK | 17 이상 (개발 환경 확인: Android Studio 내장 JBR 25) |
-| 빌드 도구 | Gradle 9.8.2(wrapper), AGP 9.4.1, Kotlin 2.4.21 |
-| 백엔드 | Spring Boot 4.1.2, 포트 8081 (개발용. 제출 release APK는 공개 시설·경로 접근성 데이터를 앱에 내장해 서버 없이 동작) |
+| 차량 API | AAOS `android.car` (Activity `distractionOptimized` 선언) |
+| 빌드 도구 | JDK 17 이상, Gradle 9.8.2(wrapper), AGP 9.4.1, Kotlin 2.4.21 |
+| 백엔드(선택) | Spring Boot 4.1.2, 포트 8081. release APK는 공개 시설·경로 접근성 데이터를 앱에 내장해 서버 없이 동작 |
 
 필요한 설정
 
-1. Android Studio 설치 → SDK Manager에 Pleos Connect System Image(API 34) 추가 → Automotive AVD `Pleos Connect v2.1.0` 생성 (Default boot: **Cold** 필수 — quick boot에서는 VHAL을 쓸 수 없음). 자세한 순서는 2.2 "처음 1회 사람이 할 일". AVD는 `scripts/setup.sh --create-avd`로도 만들 수 있습니다.
-2. 레포 루트의 `local.properties`(git에 포함하지 않음)는 `scripts/setup.sh`가 만듭니다. 직접 만들 때:
-   ```properties
-   sdk.dir=/Users/<사용자>/Library/Android/sdk
-   ```
-3. JDK 17 이상: `scripts/*.sh`는 `JAVA_HOME` → Android Studio 내장 JBR → `/usr/libexec/java_home` 순으로 찾습니다. 직접 Gradle을 돌릴 때 `JAVA_HOME`이 없으면:
-   ```bash
-   export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
-   ```
-4. 차량 상태 시뮬레이션은 Virtual Console 사용: `scripts/pleos-console.sh` (주행 상태로 바꾸면 앱 상단 배너가 "주행 중 · 제한 적용"으로 바뀜).
-5. 주간/야간 테마는 시스템 야간 모드를 따른다: `adb shell cmd uimode night yes|no`.
-6. **Cold boot 직후 기본 내비 앱을 한 번 먼저 열어 주세요.** 에뮬레이터 이미지의 기본 내비가 처음 열리기 전에는 내비 서비스가 경로 상태 조회에 응답하지 않아, 앱의 "차량·연결 상태"에 "내비 정보를 받지 못했어요"가 보일 수 있습니다. 하단 독의 내비 아이콘으로 "어디로 갈까요?" 화면을 띄운 뒤 앱으로 돌아와 "다시 확인"을 누르면 정상 연결됩니다(경로가 없으면 "내비에서 목적지를 설정해 주세요"). 내비 앱이 "실행이 지연되고 있습니다"에 머물면 "다시 시도"를 누릅니다.
+1. AVD는 **Cold boot**로 실행합니다(quick boot에서는 VHAL을 쓸 수 없음). `scripts/pleos-emu.sh`가 Cold boot로 띄웁니다.
+2. **Cold boot 직후 기본 내비 앱을 한 번 먼저 열어 주세요.** 기본 내비가 처음 열리기 전에는 경로 상태 조회에 응답하지 않아 "내비 정보를 받지 못했어요"가 보일 수 있습니다. 하단 독의 내비 아이콘으로 "어디로 갈까요?" 화면을 띄운 뒤 앱으로 돌아와 "다시 확인"을 누르면 연결됩니다. 내비가 "실행이 지연되고 있습니다"에 머물면 "다시 시도"를 누릅니다.
+3. 주행 상태는 Virtual Console로 바꿉니다: `scripts/pleos-console.sh` → 기어 D·속도 입력(앱이 운전 중 제한 화면으로 바뀜).
+4. 주간/야간 테마는 시스템 야간 모드를 따릅니다: `adb shell cmd uimode night yes|no`.
 
 ## 4. APK 파일 위치 또는 GitHub Release 링크
 
 - 저장소 내 `apk/` 폴더: [`apk/아가랑_아가랑_release.apk`](apk/아가랑_아가랑_release.apk) (release 빌드, v2·v3 서명, 약 49MB)
 - GitHub 파일 크기 한도(100MB) 안이라 별도 Releases 링크는 쓰지 않습니다.
-- 이 APK는 커밋 `6dc99a5` 시점의 소스로 빌드했습니다. 그 뒤 main에 들어간 공용 UI 컴포넌트·debug 전용 SDK 연결 확인 변경은 APK에 포함되지 않았습니다.
+- 이 APK는 커밋 `5404fee` 시점의 소스로 빌드했습니다. 그 뒤 main에 들어간 UI 정리(공용 컴포넌트, 정차 중 홈 버튼 정리·추천 표시 등)는 APK에 포함되지 않았습니다.
 
 ---
 
@@ -103,62 +86,32 @@ scripts/run-app.sh -Phmg.backendUrl=http://10.0.2.2:9090
 
 ```
 .
-├── apk/                 # 제출용 release APK (apk/아가랑_아가랑_release.apk)
-├── frontend/app/        # :frontend:app  Android Automotive 앱 (Kotlin + Jetpack Compose)
-├── backend/             # :backend       Spring Boot(Kotlin) API 서버
-├── shared/              # :shared        앱·서버 공용 DTO (순수 Kotlin JVM, kotlinx.serialization)
-├── scripts/             # 에뮬레이터·Virtual Console·캡처·앱 실행 스크립트
-├── docs/                # 구조 설명서(architecture.md)·기능 설계 문서(agarang/)
-├── licenses/            # 서드파티 라이선스 전문 (Asta Sans OFL)
-├── gradle/libs.versions.toml   # 버전 카탈로그
-├── settings.gradle.kts  # 모듈·저장소(Pleos Maven 포함) 설정
-└── build.gradle.kts
+├── apk/            # 제출용 release APK
+├── frontend/app/   # :frontend:app  차량 앱 (Kotlin + Jetpack Compose, 일반 Activity 앱)
+├── shared/         # :shared        예보 엔진·데이터 계약 (순수 Kotlin JVM)
+├── backend/        # :backend       Spring Boot(Kotlin) 서버와 공개 시설 데이터(release는 앱에 내장)
+├── scripts/        # 에뮬레이터·Virtual Console·앱 실행·환경 점검 스크립트
+└── licenses/       # 서드파티 라이선스 전문 (Asta Sans OFL)
 ```
 
-API
+## 참고 문서
 
-| 메서드 | 경로 | 응답 (shared `HealthResponse`) |
-| --- | --- | --- |
-| GET | `/api/health` | `{"status":"UP","service":"hmg-backend","version":"0.0.1","timestamp":"..."}` |
+코드 주석의 근거는 아래 원문 문서를 가리킵니다. 문서가 충돌하면 위쪽을 우선합니다.
 
-## 개발 명령
+1. Pleos Connect UI 디자인 가이드 — https://document.pleos.ai/docs/connect/guide/docs-design/Introduction/intro
+2. Pleos 차량 앱 기획·개발 가이드 — https://document.pleos.ai/docs/pleos-only/vehicle-app-planning-guide/intro , https://document.pleos.ai/docs/pleos-only/vehicle-app-developer-guide/intro
+3. Pleos SDK 레퍼런스 — https://document.pleos.ai/docs/pleos-only/connect-sdk-pleos/
+4. Google Design for Driving / Android for Cars(Pleos에 수치가 없을 때만 보조 근거) — https://developer.android.com/design/ui/cars , https://developer.android.com/docs/quality-guidelines/car-app-quality
+5. AAOS 운전자 주의 분산 가이드라인 — https://source.android.com/docs/automotive/driver_distraction/guidelines
 
-```bash
-export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+아기 상태 예보의 일반 참고 자료(의료 판단이 아니라 여정 계획용 참고 범위로만 씁니다)
 
-# 전체 빌드
-./gradlew :frontend:app:assembleDebug :backend:build :shared:build
-
-# release APK (서명 설정 후) — 산출물: frontend/app/build/outputs/apk/release/
-./gradlew :frontend:app:assembleRelease
-
-# 백엔드 실행
-./gradlew :backend:bootRun
-
-# 로그 확인 / Gradle 데몬 종료
-adb logcat -s HmgApp
-./gradlew --stop
-```
-
-에뮬레이터·앱 스크립트(`scripts/`, bash, macOS·Linux 공용). `ANDROID_HOME`이 없으면 macOS `~/Library/Android/sdk`, Linux `~/Android/Sdk` 순으로 찾습니다.
-
-| 스크립트 | 하는 일 |
-| --- | --- |
-| `scripts/setup.sh [--check \| --install \| --create-avd]` | 개발환경 점검(JDK, SDK, `local.properties`, SDK 패키지, Pleos 이미지, AVD, Gradle wrapper)과 ✅/⚠️/❌ 요약. 기본 모드는 `local.properties` 생성 + 에뮬레이터·백엔드 백그라운드 기동(이미 실행 중이면 건너뜀). `--check` 점검만, `--install` 대화형 설치, `--create-avd` AVD만 생성. 환경변수 `HMG_AUTOSTART=0`, `PLEOS_AVD`, `HMG_BACKEND_PORT` |
-| `scripts/dev-down.sh [--emu] [--dry-run]` | setup.sh가 띄운 백엔드(및 포트 8081을 듣는 이 레포 backend 프로세스) 중지. `--emu`면 에뮬레이터도 끔 |
-| `scripts/pleos-emu.sh [--wait] [emulator 인자...]` | Pleos AVD를 Cold boot(`-no-snapshot-load -no-snapshot-save`)로 백그라운드 실행하고 로그 경로를 출력. 이미 실행 중이면 안내만 하고 종료. `--wait`이면 부팅 완료까지 대기. AVD 이름은 `PLEOS_AVD`로 바꿈 |
-| `scripts/pleos-console.sh` | `adb wait-for-device` → `adb forward tcp:8088 tcp:8088` → 브라우저로 Virtual Console(`http://127.0.0.1:8088/`) 열기 |
-| `scripts/screenshot.sh [파일]` | 화면 캡처(PNG). 캡처는 git에 넣지 않습니다 |
-| `scripts/run-app.sh [gradle 인자...]` | `./gradlew :frontend:app:installDebug` 후 앱 실행 |
-| `./gradlew devSetup` | `scripts/setup.sh` 기본 모드를 Gradle 태스크로 실행. IntelliJ·Android Studio가 Gradle 동기화 후 자동 실행(idea-ext `afterSync`). `-Phmg.autostart=false`면 자동 기동 끔 |
+- CDC 모유수유 빈도 — https://www.cdc.gov/infant-toddler-nutrition/breastfeeding/how-much-and-how-often.html
+- CDC 분유수유 빈도 — https://www.cdc.gov/infant-toddler-nutrition/formula-feeding/how-much-and-how-often.html
+- AAP(HealthyChildren) 카시트 장시간 이동 — https://www.healthychildren.org/English/tips-tools/ask-the-pediatrician/Pages/Is-it-safe-for-my-baby-to-travel-in-a-car-seat-a-few-hours-at-a-time.aspx
+- The Lullaby Trust 카시트와 수면 — https://www.lullabytrust.org.uk/safer-sleep-advice/product-information/car-seats-and-sids
+- NHS 우는 아기 달래기 — https://www.nhs.uk/baby/caring-for-a-newborn/soothing-a-crying-baby/
 
 ## 라이선스
 
-- 글꼴 **Asta Sans** (`frontend/app/src/main/res/font/asta_sans_variable.ttf`): Copyright 2024 The Asta Sans Project Authors, SIL Open Font License 1.1. 전문은 [`licenses/AstaSans-OFL.txt`](licenses/AstaSans-OFL.txt).
-  - 출처: https://github.com/42dot/Asta-Sans (Google Fonts 배포본 `ofl/astasans/AstaSans[wght].ttf`, google/fonts 커밋 `db2611132856bfec1fa194602b4d1aa6ec1c09e8`), 폰트 버전 1.000, 가변 축 wght 300~800.
-
-## 참고
-
-- release 서명 키는 저장소에 포함하지 않습니다(`*.jks`, `*.keystore`, `keystore.properties`는 gitignore).
-- release 빌드는 서버를 쓰지 않습니다(`BUNDLED_FACILITY_DATA=true`, `backend/src/main/resources/facilities/*.json`을 assets로 포함). debug에서 같은 동작을 보려면 `-Phmg.bundledData=true`.
-- release 서명은 `HMG_RELEASE_STORE_FILE`·`HMG_RELEASE_STORE_PASSWORD`·`HMG_RELEASE_KEY_ALIAS`·`HMG_RELEASE_KEY_PASSWORD` 환경변수가 모두 있을 때만 적용됩니다.
+- 글꼴 **Asta Sans** (`frontend/app/src/main/res/font/asta_sans_variable.ttf`): Copyright 2024 The Asta Sans Project Authors, SIL Open Font License 1.1. 전문은 [`licenses/AstaSans-OFL.txt`](licenses/AstaSans-OFL.txt). 출처: https://github.com/42dot/Asta-Sans (폰트 버전 1.000).
