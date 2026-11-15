@@ -1,6 +1,6 @@
 package com.hmgchallenge.shared.forecast
 
-/** Product heuristics for trip planning, not pediatric thresholds. Public references are listed in README "참고 문서". */
+/** Product heuristics for trip planning, not pediatric thresholds. Public age context sources are in [AgeReferenceModel]. */
 data class ForecastPolicy(
     val version: String = "planning-policy-v1",
     val cautionMinutes: Int = 60,
