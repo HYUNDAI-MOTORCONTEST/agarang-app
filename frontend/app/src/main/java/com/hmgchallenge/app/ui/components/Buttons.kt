@@ -42,7 +42,7 @@ import com.hmgchallenge.app.ui.theme.pleosTween
 
 /**
  * Pleos 버튼 인터랙션(INTER): 누르면 95%로 줄고 배경색이 바뀐다. 물결(ripple)은 쓰지 않는다.
- * 누름 피드백은 조작 확인용이라 운전 중에도 유지한다(pleos-components.md 4장, 팀 판단).
+ * 누름 피드백은 조작 확인용이라 운전 중에도 유지한다(Pleos UI 디자인 가이드, 팀 판단).
  * 터치 영역 밖으로 손가락이 나가면 취소되는 것은 Compose `clickable` 기본 동작과 같다.
  *
  * 반환한 Modifier는 크기·배경보다 앞에 둔다. 배경색은 [pressed]를 보고 호출한 쪽이 고른다.
@@ -115,7 +115,7 @@ private fun PleosColors.button(style: PleosButtonVariant, enabled: Boolean, pres
 }
 
 /**
- * Pleos Basic button(pleos-ui.md 9장 BUTTON).
+ * Pleos Basic button(Pleos UI 디자인 가이드).
  * - [loading]이면 로더를 보이고 조작을 막는다(BUTTON "Loading 상태는 조작 불가"). 운전 중에는 회전 로더 대신 라벨만 둔다.
  * - [icon]은 라벨 앞에 붙는다(아이콘만 있는 버튼은 [PleosIconButton]).
  */

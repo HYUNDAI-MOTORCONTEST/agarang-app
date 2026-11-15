@@ -29,7 +29,7 @@
         android:theme="@style/Theme.HmgApp">
 
         <!-- CCP(로터리 컨트롤러) 미지원 선언. User-installed 앱은 CCP가 선택이고, 필수 조작은 터치만으로 끝나야 한다
-             (docs/guides/pleos-platform.md 9장). CCP를 지원하게 되면 true로 바꾸고 포커스 이동을 검증한다. -->
+             (Pleos 차량 앱 개발 가이드, CCP·Back). CCP를 지원하게 되면 true로 바꾸고 포커스 이동을 검증한다. -->
         <meta-data
             android:name="com.hmg.rotary.ROTARY_SUPPORTED"
             android:value="false" />
@@ -45,8 +45,8 @@
             android:exported="true"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|density|uiMode">
             <!-- Distraction Optimized: 주행 중에도 이 화면을 쓸 수 있게 선언한다.
-                 DO를 선언하지 않으면 주행 중 사용 불가(docs/guides/pleos-dev.md 2.1장). 선언 방법은 Pleos 문서에 없어
-                 AAOS 방식을 따른다(docs/guides/google-cars.md 4장). 이 화면은 CarUxRestrictions를 받아
+                 DO를 선언하지 않으면 주행 중 사용 불가(Pleos 차량 앱 개발 가이드, 주행 규제). 선언 방법은 Pleos 문서에 없어
+                 AAOS 방식을 따른다(AAOS 운전자 주의 분산 가이드라인). 이 화면은 CarUxRestrictions를 받아
                  제한을 직접 적용한다(MainActivity.kt MainScreen 주석). -->
             <meta-data
                 android:name="distractionOptimized"

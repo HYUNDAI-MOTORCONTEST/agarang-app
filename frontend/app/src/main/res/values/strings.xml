@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">아가랑</string>
 
-    <!-- 운전 상태 배너 (한 메시지 3줄 이하, docs/guides/pleos-ui.md 7장) -->
+    <!-- 운전 상태 배너 (한 메시지 3줄 이하, Pleos UI 디자인 가이드) -->
     <string name="drive_parked">주차 중</string>
     <string name="drive_parked_detail">모든 기능 사용 가능</string>
     <string name="drive_restricted">주행 중 · 제한 적용</string>

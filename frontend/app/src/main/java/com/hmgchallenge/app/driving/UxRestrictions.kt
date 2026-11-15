@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 /**
  * 운전 중 UX 제한 상태(CarUxRestrictions)를 앱 안에서 쓰는 형태로 옮긴 값.
  *
- * 근거: docs/guides/pleos-dev.md 2.2·2.4장
+ * 근거: Pleos 차량 앱 개발 가이드(주행 규제), AAOS CarUxRestrictions
  * - `isRequiresDistractionOptimization()`이 참이면 애니메이션·자동 스크롤을 끄고,
  * - `getActiveRestrictions()` 비트마스크의 플래그별로 기능을 막는다.
  * - 지역별 규제는 플랫폼이 플래그로 내려주므로 앱은 플래그만 본다(지역 판단 금지).
@@ -53,7 +53,7 @@ data class UxRestrictionsState(
         if (limitStringLength && text.length > maxStringLength) text.take(maxStringLength - 1) + "…" else text
 
     companion object {
-        // CarUxRestrictions 상수 값(AAOS 공개 API, docs/guides/pleos-dev.md 2.3장 표와 같음).
+        // CarUxRestrictions 상수 값(AAOS 공개 API).
         // android.car가 없는 환경에서도 클래스 로딩 없이 쓰려고 값으로 둔다.
         const val FLAG_NO_DIALPAD = 0x1
         const val FLAG_NO_FILTERING = 0x2
@@ -85,7 +85,7 @@ data class UxRestrictionsState(
 }
 
 /**
- * Compose 트리 어디서든 같은 제한 상태를 읽게 한다(docs/guides/pleos-dev.md 2.4장 "한 곳에서 읽게").
+ * Compose 트리 어디서든 같은 제한 상태를 읽게 한다(한 곳에서 읽게).
  * 기본값은 안전한 쪽(제한)으로 둔다.
  */
 val LocalUxRestrictions = staticCompositionLocalOf { UxRestrictionsState.Connecting }

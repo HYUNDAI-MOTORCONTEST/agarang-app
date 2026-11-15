@@ -72,7 +72,7 @@ class PleosColors private constructor(val isDark: Boolean) {
 
     // ── System > Background (표: Background) ──
     // 표 글자를 따랐다. 견본은 행이 한 칸씩 밀려 있다(견본 primary = 글자 popup, secondary = 글자 primary, popup = 글자 secondary).
-    // 견본 hex 자체는 Grayscale 값과 정확히 같아 Grayscale 표와의 충돌은 아니다. pleos-ui.md 5장.
+    // 견본 hex 자체는 Grayscale 값과 정확히 같아 Grayscale 표와의 충돌은 아니다. Pleos UI 디자인 가이드.
     val background_primary = basic_50
     val background_secondary = basic_00
     val background_popup = ref(basic_00, basic_100)
@@ -277,7 +277,7 @@ data class PleosButtonStyle(
 
 /**
  * 화면에서 쓰는 역할 → 토큰 매핑. 토큰은 문서 System Color를 쓰고, 문서에 해당 역할이 없는 곳만 팀 판단(표에 [팀]).
- * 대비는 WCAG 2.x 상대 휘도 공식으로 계산했다(Pleos 기준 4.5:1 이상, docs/guides/pleos-ui.md 5장).
+ * 대비는 WCAG 2.x 상대 휘도 공식으로 계산했다(Pleos UI 디자인 가이드 기준 4.5:1 이상).
  * 알파 토큰은 아래 배경 위에 합성한 색으로 계산했다.
  *
  * | 역할 | 글자 / 바탕 토큰 | 주간 대비 | 야간 대비 |

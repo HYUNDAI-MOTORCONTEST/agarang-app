@@ -13,7 +13,7 @@ plugins {
     alias(libs.plugins.idea.ext)
 }
 
-// 개발환경 점검 + 에뮬레이터·백엔드 자동 기동(scripts/setup.sh 기본 모드). Claude Code·Codex SessionStart 훅과 같은 동작.
+// 개발환경 점검 + 에뮬레이터·백엔드 자동 기동(scripts/setup.sh 기본 모드).
 // - IDE: 아래 afterSync 트리거로 Gradle 동기화가 끝날 때마다 실행된다(첫 import 포함).
 // - 명령줄: 아무 태스크도 devSetup에 의존하지 않으므로 ./gradlew build 등에서는 실행되지 않는다. 직접 돌릴 때만 ./gradlew devSetup.
 // - 자동 기동을 끄려면 ~/.gradle/gradle.properties에 hmg.autostart=false(IDE는 셸 환경변수 HMG_AUTOSTART를 못 볼 수 있다).

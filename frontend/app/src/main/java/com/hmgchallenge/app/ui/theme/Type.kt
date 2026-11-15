@@ -43,7 +43,7 @@ val AstaSans = FontFamily(
  * - 굵기: 원문은 Headline ExtraBold·Bold, Title ExtraBold·Bold·Regular, Body Strong·Normal, Label Normal.
  *   기본 스타일은 각 위계에서 가장 흔히 쓸 굵기(Headline·Title Bold, Body·Label Normal)로 두고,
  *   Body Strong은 [bodyLargeStrong]처럼 따로 둔다. Strong의 실제 wght 값은 원문에 없어 SemiBold(600)로 정했다.
- * - 최소 크기: 원문 12sp 이상. Label Small(20)이 가장 작다. 팀 규칙(본문·버튼 24sp 이상, pleos-ui.md 10장)에 따라
+ * - 최소 크기: 원문 12sp 이상. Label Small(20)이 가장 작다. 팀 규칙(본문·버튼 24sp 이상, Pleos UI 디자인 가이드)에 따라
  *   버튼·본문에는 Label Medium(24) 이상만 쓴다.
  */
 @Immutable

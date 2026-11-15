@@ -34,4 +34,5 @@ rootProject.name = "hmg-vehicle-app"
 include(":shared")
 include(":backend")
 include(":frontend:app")
-include(":frontend:sandbox") // 로컬 테스트용 샌드박스 앱(제출 대상 아님)
+// 로컬 실험용 샌드박스 앱(제출 대상 아님). 폴더가 있는 저장소에서만 포함한다.
+if (file("frontend/sandbox").isDirectory) include(":frontend:sandbox")

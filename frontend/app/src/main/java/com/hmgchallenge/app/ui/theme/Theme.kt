@@ -47,7 +47,7 @@ private fun PleosColors.toColorScheme(dark: Boolean): ColorScheme {
 
 /**
  * 주간/야간 테마. 시스템 야간 모드(Configuration.uiMode night)를 따른다.
- * - Pleos 문서에는 주야간 신호 전달 방식이 없다. Android 표준 uiMode night 기준으로 가정한다(docs/guides/pleos-ui.md 10장).
+ * - Pleos 문서에는 주야간 신호 전달 방식이 없다. Android 표준 uiMode night 기준으로 가정한다(팀 판단).
  * - MainActivity는 `configChanges`에 uiMode가 있어 재생성되지 않는다. Compose의 LocalConfiguration이 바뀌어
  *   [isSystemInDarkTheme]가 다시 계산되므로 화면은 바로 바뀐다(에뮬레이터 `cmd uimode night yes|no`로 확인).
  * - 글꼴은 Asta Sans, 글자 크기는 Pleos 위계([PleosTypography]).

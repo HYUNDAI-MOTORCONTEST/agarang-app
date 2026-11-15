@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
  *
  * Guidelines and token origins:
  * - Pleos Connect UI specs (48dp icons, 8px baseline grid, 3-level shadow, INTER cubic-bezier & durations, 792dp toast):
- *   docs/guides/pleos-ui.md, docs/guides/pleos-components.md
+ *   Pleos Connect UI design guide (foundations, components)
  * - Touch targets (64dp min, 72dp primary action, 96dp hero action):
- *   docs/guides/pleos-ui.md §10 (Android for Cars UX-1 fallback)
+ *   Pleos has no touch-size number; Android for Cars quality guideline UX-1 is the fallback
  */
 @Immutable
 data class PleosDimens(
@@ -70,7 +70,7 @@ data class PleosDimens(
     val strokeCheck: Dp = 3.dp,
     val strokeCheckMark: Dp = 4.dp,
 
-    // Overlay / Toast Specs (docs/guides/pleos-components.md §6)
+    // Overlay / Toast Specs (Pleos UI design guide, toast)
     val toastMaxWidth: Dp = 792.dp,
     val toastTextMaxWidth: Dp = 712.dp,
     val toastMargin: Dp = 24.dp,
@@ -103,7 +103,7 @@ data class PleosShapes(
 )
 
 /**
- * Pleos motion & interaction tokens (docs/guides/pleos-components.md §4).
+ * Pleos motion & interaction tokens (Pleos UI design guide, motion).
  * Keep touch press shrink subtle; avoid decorative transition motion when driving restrictions apply.
  */
 object PleosMotion {
@@ -118,7 +118,7 @@ object PleosMotion {
 }
 
 /**
- * Pleos 3-level elevation/shadow specifications (docs/guides/pleos-components.md §4).
+ * Pleos 3-level elevation/shadow specifications (Pleos UI design guide, shadow).
  */
 object PleosElevation {
     @Immutable
