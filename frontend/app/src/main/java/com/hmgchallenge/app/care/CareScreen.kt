@@ -120,7 +120,9 @@ fun CareScreen(
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             // Observed Pleos AVD window: 616x324dp in landscape. Keep two 260dp control columns at 600dp+.
-            val wide = maxWidth >= dimens.breakpointCareWide
+            // 출발 준비 안(아이콘 붙은 96dp 기록 버튼)에서는 세로 창(약 793dp)에서 기록 버튼과 최근 기록을 나란히 두면
+            // 버튼 글자가 단어 중간에서 줄바꿈된다. 기록 버튼이 반쪽에서도 2열을 유지할 만큼 넓을 때만 나란히 둔다.
+            val wide = maxWidth >= if (embeddedInShell) dimens.breakpointCareWideShell else dimens.breakpointCareWide
             val scrollState = key(visibleRoute) { rememberScrollState() }
             Column(
                 Modifier
@@ -273,7 +275,7 @@ private fun QuickRecords(record: CareRecord, enabled: Boolean, onRecord: (CareEv
     BoxWithConstraints(modifier.fillMaxWidth()) {
         // Two 72dp rows fit the 324dp-high Pleos window with 24dp edge/target spacing.
         // In the departure shell (large = true) rows are 96dp; the parent column scrolls, so nothing is clipped.
-        val columns = if (maxWidth >= dimens.breakpointQuickRecordTwoCol) 2 else 1
+        val columns = if (maxWidth >= if (large) dimens.breakpointQuickRecordTwoColLarge else dimens.breakpointQuickRecordTwoCol) 2 else 1
         Column(verticalArrangement = Arrangement.spacedBy(dimens.sectionSpacing)) {
             CareEventType.entries.chunked(columns).forEach { types ->
                 Row(horizontalArrangement = Arrangement.spacedBy(dimens.sectionSpacing)) {

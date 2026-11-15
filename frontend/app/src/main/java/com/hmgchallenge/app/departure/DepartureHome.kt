@@ -43,6 +43,7 @@ import com.hmgchallenge.app.ui.theme.PleosTheme
 import com.hmgchallenge.shared.care.CareEventType
 import com.hmgchallenge.shared.care.CareJournal
 import com.hmgchallenge.shared.departure.DepartureChoice
+import com.hmgchallenge.shared.departure.DepartureStoreStatus
 import com.hmgchallenge.shared.departure.SupplyKind
 import com.hmgchallenge.shared.forecast.CareNeed
 import com.hmgchallenge.shared.forecast.ForecastReasonCode
@@ -193,14 +194,18 @@ private fun DepartureChoices(state: DepartureUiState, onChoice: (DepartureChoice
     val forecast = state.evaluation?.forecast
     // 아직 고르지 않았으면 예보 제목과 같은 기준으로 출발 방법 하나를 진하게 추천한다(정차 중 첫 조작을 분명히).
     // 돌봄 기록이 없거나, 근거가 부족하거나(UNKNOWN), 주의 단계라도 도착 전 겹침이 없으면 추천하지 않는다.
-    // "지금 출발"은 도착 예정 시각과 돌봄 예상이 모두 있어 도착 전 겹침을 계산한 여유 단계에서만 추천한다
-    // (제목이 "도착 후 돌봄도 확인해요"일 때와 같다). 목적지가 없어 겹침을 확인하지 못했으면 출발을 권하지 않는다.
+    // "지금 출발"은 도착 예정 시각과 돌봄 예상이 모두 있어 도착 전 겹침을 계산한 여유 단계에서만 추천한다.
+    // 목적지가 없어 겹침을 확인하지 못했으면 출발을 권하지 않는다.
+    // 수유 예상이 없으면 예보 카드가 "돌봄 기록 확인"을 권하므로 "지금 출발"도 추천하지 않는다(두 카드 기준을 맞춤).
+    // 돌봄 먼저·중간 정차는 더 조심하는 쪽이라 수유 예상이 없어도 그대로 추천한다.
+    // 저장소가 준비되지 않았으면(불러오는 중·다시 읽기 필요) 추천하지 않는다. 저장 중 잠깐 비활성되는 동안에는 문구를 유지해 깜빡이지 않게 한다.
     val hasRecord = state.care.record?.events?.isNotEmpty() == true
+    val feedKnown = forecast?.needs?.firstOrNull { it.need == CareNeed.FEED }?.estimate != null
     val overlapChecked = forecast?.estimates?.isNotEmpty() == true && forecast.journey?.estimatedArrivalAtEpochMillis != null
-    val recommended = if (decision != null || !hasRecord) null else when {
+    val recommended = if (decision != null || !hasRecord || state.preparation.status != DepartureStoreStatus.READY) null else when {
         forecast?.stage == ForecastStage.IMMINENT -> DepartureChoice.AFTER_CARE
         forecast?.journey?.careBeforeArrival?.isNotEmpty() == true -> DepartureChoice.STOP_ON_WAY
-        forecast?.stage == ForecastStage.RELAXED && overlapChecked -> DepartureChoice.NOW
+        forecast?.stage == ForecastStage.RELAXED && overlapChecked && feedKnown -> DepartureChoice.NOW
         else -> null
     }
     CareCard(stringResource(R.string.departure_choose_title)) {

@@ -84,6 +84,10 @@ data class PleosDimens(
     val breakpointMinuteGrid: Dp = 540.dp,
     val breakpointTwoGrid: Dp = 360.dp,
     val breakpointQuickRecordTwoCol: Dp = 244.dp,
+    /** 아이콘이 붙은 큰 기록 버튼(출발 준비 안 돌봄 기록 탭)을 2열로 둘 최소 폭. 버튼 하나가 "수면 시작"을 한 줄로 담는 폭(약 200dp) × 2 + 간격. */
+    val breakpointQuickRecordTwoColLarge: Dp = 440.dp,
+    /** 출발 준비 안 돌봄 기록 탭에서 기록 버튼과 최근 기록을 나란히 둘 최소 폭. 반쪽 폭이 위 2열 기준(440dp)을 넘도록 440 × 2 + 간격 24 + 여백 16. */
+    val breakpointCareWideShell: Dp = 920.dp,
 )
 
 @Immutable
