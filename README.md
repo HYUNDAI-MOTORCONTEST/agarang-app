@@ -11,7 +11,7 @@
 
 ### 2.1 APK 설치·실행
 
-Pleos Connect 에뮬레이터(4장)를 켠 뒤 설치합니다. 서버 없이 동작합니다. APK는 저장소의 `apk/` 폴더에 있고, [바로 받기](https://github.com/HYUNDAI-MOTORCONTEST/agarang/raw/main/apk/%EC%95%84%EA%B0%80%EB%9E%91_%EC%95%84%EA%B0%80%EB%9E%91_release.apk)로도 내려받을 수 있습니다.
+Pleos Connect 에뮬레이터(4장)를 켠 뒤 설치합니다. 서버 없이 동작합니다. APK는 저장소의 `apk/` 폴더에 있고, [바로 받기](https://github.com/HYUNDAI-MOTORCONTEST/agarang-app/raw/main/apk/%EC%95%84%EA%B0%80%EB%9E%91_%EC%95%84%EA%B0%80%EB%9E%91_release.apk)로도 내려받을 수 있습니다.
 
 ```bash
 adb install -r apk/아가랑_아가랑_release.apk
@@ -70,7 +70,7 @@ Android Studio로 저장소를 열어 `frontend/app`을 실행하거나, 명령�
 
 ## 5. APK 파일 위치 또는 GitHub Release 링크
 
-- [`apk/아가랑_아가랑_release.apk`](apk/아가랑_아가랑_release.apk) (release 빌드, v2·v3 서명, 약 49MB) — [바로 받기](https://github.com/HYUNDAI-MOTORCONTEST/agarang/raw/main/apk/%EC%95%84%EA%B0%80%EB%9E%91_%EC%95%84%EA%B0%80%EB%9E%91_release.apk)
+- [`apk/아가랑_아가랑_release.apk`](apk/아가랑_아가랑_release.apk) (release 빌드, v2·v3 서명, 약 49MB) — [바로 받기](https://github.com/HYUNDAI-MOTORCONTEST/agarang-app/raw/main/apk/%EC%95%84%EA%B0%80%EB%9E%91_%EC%95%84%EA%B0%80%EB%9E%91_release.apk)
 - 파일이 GitHub 업로드 한도 안이라 Releases는 쓰지 않았습니다. GitHub 웹 화면은 큰 파일을 미리 보여 주지 않으므로 위 바로 받기 링크를 쓰세요.
 - 커밋 `5d42752` 시점의 최신 `main` 소스로 빌드했습니다(서버 없이 내장 시설 데이터로 동작).
 
