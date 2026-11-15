@@ -26,6 +26,8 @@ internal enum class CareSymbol(@param:DrawableRes val outlined: Int, @param:Draw
     UNDO(R.drawable.ic_agarang_undo_outlined, R.drawable.ic_agarang_undo_filled),
     BABY(R.drawable.ic_agarang_baby_outlined, R.drawable.ic_agarang_baby_filled),
     SOOTHE(R.drawable.ic_agarang_soothe_outlined, R.drawable.ic_agarang_soothe_filled),
+    /** 뒤로(상단 "이전" 버튼). 선택 상태가 없어 두 변형이 같다. */
+    BACK(R.drawable.ic_back, R.drawable.ic_back),
 }
 
 /** Original artwork traced to transparent vectors on the Pleos 48dp grid (docs/agarang/icons.md).

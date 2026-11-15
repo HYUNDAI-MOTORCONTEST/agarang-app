@@ -97,7 +97,6 @@
     <string name="care_saved_short">저장 완료</string>
     <string name="care_undone_short">취소 완료</string>
     <string name="care_ready_short">기록 대기</string>
-    <string name="care_undo_short">취소</string>
     <string name="care_history_open">기록 목록</string>
     <string name="care_feed_button">수유\n%1$d mL</string>
     <string name="navi_title">내비 연동</string>
@@ -294,7 +293,6 @@
     <string name="packing_manual_title">직접 정한 이동 시간</string>
     <string name="packing_name_hint">예: 손수건</string>
     <string name="packing_name_label">준비물 이름</string>
-    <string name="packing_open">준비물 확인하기</string>
     <string name="packing_preview_title">준비물 %1$d / %2$d 확인</string>
     <string name="packing_recheck">여정·수량이 달라졌어요. 다시 확인해 주세요.</string>
     <string name="packing_remove">삭제</string>
@@ -338,9 +336,9 @@
     <string name="response_sleeping">최근 기록상 수면 중이에요. 현재 상태를 확인해 주세요.</string>
     <string name="response_future">기록 시각이 현재보다 뒤예요. 시각을 확인해 주세요.</string>
     <string name="response_stale">기준 기록이 오래돼 현재 시각을 예측하지 않아요.</string>
-    <string name="response_insufficient">확인되지 않은 항목이 있어요. 표시 순서는 원인 가능성의 순위가 아니에요.</string>
+    <string name="response_insufficient">확인 안 된 항목이 있어요. 순서는 원인 순위가 아니에요.</string>
     <string name="response_stop_title">정차 계획 선택</string>
-    <string name="response_stop_detail">풀케어는 수유시설이 확인된 후보, 가까운 정차는 경로에서 더 빨리 도달하는 후보예요.</string>
+    <string name="response_stop_detail">풀케어는 수유실이 있는 곳, 가까운 정차는 더 빨리 닿는 곳이에요.</string>
     <string name="response_full_care">풀케어</string>
     <string name="response_nearest">가까운 정차</string>
     <string name="response_no_stop">접근이 확인된 후보 없음</string>
@@ -352,7 +350,7 @@
     <string name="response_prepare_navigation">내비 추가 확인</string>
     <string name="response_stop_expired">여정·시설 정보가 바뀌어 선택을 해제했어요. 현재 후보를 다시 확인해 주세요.</string>
     <string name="response_care_title">정차 후 돌봄 기록</string>
-    <string name="response_care_detail">실제로 마친 돌봄만 기록해 주세요. 저장되면 출발 예보로 돌아가요.</string>
+    <string name="response_care_detail">실제로 마친 돌봄만 기록해 주세요.</string>
     <string name="response_complete_without_record">기록 없이 돌봄 완료 확인</string>
     <string name="response_recorded">돌봄 기록을 저장하고 대응을 마쳤어요.</string>
     <string name="response_care_confirmed">추가 기록 없이 돌봄 완료를 확인했어요.</string>
@@ -376,6 +374,7 @@
     <string name="ux_choice_now_detail">예보·준비물 확인</string>
     <string name="ux_choice_care_detail">돌봄 후 출발</string>
     <string name="ux_choice_stop_detail">가는 길 시설 확인</string>
+    <string name="ux_choice_recommended">예보 기준 추천</string>
     <string name="ux_show_packing_basis">수량·계산 근거 보기</string>
     <string name="ux_hide_packing_basis">수량·계산 근거 접기</string>
     <string name="ux_edit_items">목록 편집</string>

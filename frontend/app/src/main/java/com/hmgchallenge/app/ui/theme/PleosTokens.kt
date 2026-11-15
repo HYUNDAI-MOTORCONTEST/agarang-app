@@ -47,13 +47,14 @@ data class PleosDimens(
     val heroButtonHeight: Dp = 96.dp,
     val rowMinHeight: Dp = 88.dp,
     val headerBackWidth: Dp = 96.dp,
-    val compactActionWidth: Dp = 96.dp,
     val stepperButtonWidth: Dp = 72.dp,
     val quantityMinWidth: Dp = 64.dp,
     val iconSize: Dp = 48.dp,
     val iconStroke: Dp = 3.dp,
     val actionTileHeight: Dp = 112.dp,
     val actionChoiceHeight: Dp = 224.dp,
+    /** 주행 중 화면의 유일한 주요 조작(울음 대응). 팀 판단: 빈 화면을 남기지 않고 한눈에 찾게 크게 둔다. */
+    val drivingActionHeight: Dp = 160.dp,
     val progressTrackHeight: Dp = 8.dp,
     val progressSize: Dp = 32.dp,
     val checkboxSize: Dp = 32.dp,
@@ -83,6 +84,10 @@ data class PleosDimens(
     val breakpointMinuteGrid: Dp = 540.dp,
     val breakpointTwoGrid: Dp = 360.dp,
     val breakpointQuickRecordTwoCol: Dp = 244.dp,
+    /** 아이콘이 붙은 큰 기록 버튼(출발 준비 안 돌봄 기록 탭)을 2열로 둘 최소 폭. 버튼 하나가 "수면 시작"을 한 줄로 담는 폭(약 200dp) × 2 + 간격. */
+    val breakpointQuickRecordTwoColLarge: Dp = 440.dp,
+    /** 출발 준비 안 돌봄 기록 탭에서 기록 버튼과 최근 기록을 나란히 둘 최소 폭. 반쪽 폭이 위 2열 기준(440dp)을 넘도록 440 × 2 + 간격 24 + 여백 16. */
+    val breakpointCareWideShell: Dp = 920.dp,
 )
 
 @Immutable

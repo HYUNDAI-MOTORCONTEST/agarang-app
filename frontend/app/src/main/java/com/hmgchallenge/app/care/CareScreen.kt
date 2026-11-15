@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
@@ -27,12 +27,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.hmgchallenge.app.R
 import com.hmgchallenge.app.driving.LocalUxRestrictions
 import com.hmgchallenge.app.driving.UxRestrictionsState
+import com.hmgchallenge.app.ui.components.CareSymbol
 import com.hmgchallenge.app.ui.theme.PleosTheme
 import com.hmgchallenge.shared.care.BabyProfile
 import com.hmgchallenge.shared.care.CareEvent
@@ -110,7 +111,7 @@ fun CareScreen(
                 .padding(if (embeddedInShell) dimens.contentInset else dimens.screenPadding),
             verticalArrangement = Arrangement.spacedBy(if (embeddedInShell) dimens.itemSpacing else dimens.sectionSpacing),
         ) {
-            if (!embeddedInShell) CareButton(stringResource(R.string.care_back), goBack, primary = false)
+            if (!embeddedInShell) CareButton(stringResource(R.string.care_back), goBack, primary = false, leadingIcon = CareSymbol.BACK)
             Box(Modifier.weight(1f)) { connections() }
         }
         return
@@ -119,7 +120,9 @@ fun CareScreen(
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             // Observed Pleos AVD window: 616x324dp in landscape. Keep two 260dp control columns at 600dp+.
-            val wide = maxWidth >= dimens.breakpointCareWide
+            // 출발 준비 안(아이콘 붙은 96dp 기록 버튼)에서는 세로 창(약 793dp)에서 기록 버튼과 최근 기록을 나란히 두면
+            // 버튼 글자가 단어 중간에서 줄바꿈된다. 기록 버튼이 반쪽에서도 2열을 유지할 만큼 넓을 때만 나란히 둔다.
+            val wide = maxWidth >= if (embeddedInShell) dimens.breakpointCareWideShell else dimens.breakpointCareWide
             val scrollState = key(visibleRoute) { rememberScrollState() }
             Column(
                 Modifier
@@ -137,7 +140,7 @@ fun CareScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         if (!embeddedInShell && visibleRoute != HOME) {
-                            CareButton(stringResource(R.string.care_back), goBack, Modifier.width(dimens.headerBackWidth), primary = false)
+                            CareButton(stringResource(R.string.care_back), goBack, Modifier.widthIn(min = dimens.headerBackWidth), primary = false, leadingIcon = CareSymbol.BACK)
                         }
                         CareText(
                             stringResource(when (visibleRoute) {
@@ -178,11 +181,11 @@ fun CareScreen(
                         } else if (record != null) {
                             if (wide) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(dimens.sectionSpacing)) {
-                                    QuickRecords(record, state.canWrite, onRecord, Modifier.weight(1f))
+                                    QuickRecords(record, state.canWrite, onRecord, Modifier.weight(1f), large = embeddedInShell)
                                     LatestRecord(record, Modifier.weight(1f))
                                 }
                             } else {
-                                QuickRecords(record, state.canWrite, onRecord)
+                                QuickRecords(record, state.canWrite, onRecord, large = embeddedInShell)
                                 LatestRecord(record)
                             }
                             if (state.problem != null || state.status != CareStoreStatus.READY) CareMessage(state, onReload)
@@ -193,7 +196,9 @@ fun CareScreen(
                                 }
                             }
                         }
-                        if (!restricted) {
+                        // 출발 준비 화면 안에서는 "더 보기 → 차량·연결 상태"로 같은 화면을 열 수 있어 겹쳐 두지 않는다.
+                        // 단, 데모 중 그 버튼은 데모를 끝내고 실제 연결을 보여 준다.
+                        if (!restricted && !embeddedInShell) {
                             CareButton(stringResource(R.string.care_connections), { route = CONNECTIONS }, Modifier.fillMaxWidth(), primary = false)
                         }
                     }
@@ -232,9 +237,10 @@ private fun CareHomeHeader(record: CareRecord, state: CareState, onUndo: () -> U
             CareText(stringResource(status), maxLines = 1)
         }
         CareButton(
-            stringResource(R.string.care_undo_short), onUndo, Modifier.width(dimens.compactActionWidth),
+            // "취소"만으로는 무엇을 취소하는지 알 수 없어 홈과 같은 "최근 기록 취소" + 되돌리기 아이콘을 쓴다.
+            stringResource(R.string.care_undo), onUndo,
             enabled = state.canWrite && record.events.isNotEmpty(), primary = false,
-            tag = "care_undo", description = stringResource(R.string.care_undo),
+            tag = "care_undo", leadingIcon = CareSymbol.UNDO,
         )
     }
 }
@@ -262,13 +268,14 @@ private fun CareMessage(state: CareState, onReload: () -> Unit) {
 }
 
 @Composable
-private fun QuickRecords(record: CareRecord, enabled: Boolean, onRecord: (CareEventType) -> Unit, modifier: Modifier = Modifier) {
+private fun QuickRecords(record: CareRecord, enabled: Boolean, onRecord: (CareEventType) -> Unit, modifier: Modifier = Modifier, large: Boolean = false) {
     val dimens = PleosTheme.dimens
     val sleeping = CareJournal.isSleeping(record)
     val amount = record.profile.preferences.preferredFeedAmountMl
     BoxWithConstraints(modifier.fillMaxWidth()) {
         // Two 72dp rows fit the 324dp-high Pleos window with 24dp edge/target spacing.
-        val columns = if (maxWidth >= dimens.breakpointQuickRecordTwoCol) 2 else 1
+        // In the departure shell (large = true) rows are 96dp; the parent column scrolls, so nothing is clipped.
+        val columns = if (maxWidth >= if (large) dimens.breakpointQuickRecordTwoColLarge else dimens.breakpointQuickRecordTwoCol) 2 else 1
         Column(verticalArrangement = Arrangement.spacedBy(dimens.sectionSpacing)) {
             CareEventType.entries.chunked(columns).forEach { types ->
                 Row(horizontalArrangement = Arrangement.spacedBy(dimens.sectionSpacing)) {
@@ -279,7 +286,10 @@ private fun QuickRecords(record: CareRecord, enabled: Boolean, onRecord: (CareEv
                             CareEventType.SLEEP_END -> sleeping
                             else -> true
                         }
-                        CareButton(label, { onRecord(type) }, Modifier.weight(1f), enabled = allowed, compact = true, tag = "care_record_" + type.name)
+                        // 출발 준비 안의 돌봄 기록 탭은 기록이 주된 일이고 창 높이도 넉넉해 큰 버튼(96dp)으로 둔다.
+                        CareButton(label, { onRecord(type) }, Modifier.weight(1f).then(if (large) Modifier.heightIn(min = dimens.heroButtonHeight) else Modifier),
+                            enabled = allowed, compact = !large, tag = "care_record_" + type.name,
+                            leadingIcon = eventSymbol(type))
                     }
                 }
             }
@@ -408,4 +418,11 @@ private fun problemText(problem: CareProblem): Int = when (problem) {
     CareProblem.INVALID_TIME -> R.string.care_error_time
     CareProblem.RECORD_NOT_FOUND -> R.string.care_record_missing
     CareProblem.PARK_REQUIRED -> R.string.care_park_to_setup
+}
+
+/** 기록 종류 아이콘. 홈의 바로 돌봄 기록과 같은 기호를 쓴다(수면 시작·종료는 같은 수면 기호, 라벨로 구분). */
+private fun eventSymbol(type: CareEventType): CareSymbol = when (type) {
+    CareEventType.FEED -> CareSymbol.FEED
+    CareEventType.DIAPER -> CareSymbol.DIAPER
+    CareEventType.SLEEP_START, CareEventType.SLEEP_END -> CareSymbol.SLEEP
 }

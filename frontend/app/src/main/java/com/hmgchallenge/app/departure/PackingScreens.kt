@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -76,10 +78,14 @@ internal fun PackingChecklist(state: DepartureUiState, actions: DepartureControl
             PackingProblem.TRIP_TOO_LONG -> R.string.packing_duration_too_long
             else -> R.string.packing_duration_unknown
         }), secondary = true)
-        CareButton(stringResource(if (showBasis) R.string.ux_hide_packing_basis else R.string.ux_show_packing_basis), { showBasis = !showBasis },
-            Modifier.fillMaxWidth(), primary = false, selected = showBasis, tag = "packing-basis", selectionRole = Role.Button)
+        // 근거 보기와 계산 기준은 같은 주제라 전체 폭 두 줄 대신 한 줄에 나란히 둔다.
+        // 좁은 창에서 한쪽만 두 줄이 되어도 두 버튼 높이를 맞춘다.
+        Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(dimens.sectionSpacing)) {
+            CareButton(stringResource(if (showBasis) R.string.ux_hide_packing_basis else R.string.ux_show_packing_basis), { showBasis = !showBasis },
+                Modifier.weight(1f).fillMaxHeight(), primary = false, selected = showBasis, tag = "packing-basis", selectionRole = Role.Button)
+            CareButton(stringResource(R.string.packing_settings_open), onSettings, Modifier.weight(1f).fillMaxHeight(), primary = false, tag = "packing-settings")
+        }
         if (showBasis) PackingBasis(plan)
-        CareButton(stringResource(R.string.packing_settings_open), onSettings, Modifier.fillMaxWidth(), primary = false, tag = "packing-settings")
     }
     record.items.forEach { item ->
         val checked = plan.isChecked(item, evaluation.evaluatedAtEpochMillis)

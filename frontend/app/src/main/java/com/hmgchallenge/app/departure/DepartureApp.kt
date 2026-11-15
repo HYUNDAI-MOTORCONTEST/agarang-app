@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -38,9 +38,10 @@ import com.hmgchallenge.app.care.CareCard
 import com.hmgchallenge.app.care.CareScreen
 import com.hmgchallenge.app.driving.LocalUxRestrictions
 import com.hmgchallenge.app.driving.UxRestrictionsState
-import com.hmgchallenge.app.ui.theme.PleosTheme
-import com.hmgchallenge.app.ui.components.CareSymbol
 import com.hmgchallenge.app.ui.components.CareGlyph
+import com.hmgchallenge.app.ui.components.CareSymbol
+import com.hmgchallenge.app.ui.components.ForecastBadge
+import com.hmgchallenge.app.ui.theme.PleosTheme
 import com.hmgchallenge.shared.care.CareNotice
 import com.hmgchallenge.shared.care.CareStoreStatus
 import com.hmgchallenge.shared.departure.DepartureChoice
@@ -130,11 +131,15 @@ fun DepartureApp(
             .padding(dimens.screenPadding),
         verticalArrangement = Arrangement.spacedBy(dimens.shellGap),
     ) {
+        // 아래 탭의 첫 화면(출발 예보·준비물·돌봄 기록)에는 "이전"을 두지 않는다. 탭과 뒤로가 겹쳐 위치가 헷갈리지 않게.
+        // 하드웨어 Back은 그대로 출발 예보로 돌아간다.
+        val tabRoot = page == DeparturePage.HOME || page == DeparturePage.CHECKLIST || (page == DeparturePage.RECORDS && careSubRouteBack == null)
         DepartureHeader(
             state = state,
             page = page,
             restricted = restricted,
             responding = responding,
+            showBack = responding || (!restricted && !tabRoot),
             onBack = {
                 val subBack = careSubRouteBack
                 when {
@@ -202,7 +207,7 @@ fun DepartureApp(
                                 DepartureChoice.NOW -> DeparturePage.NOW
                                 DepartureChoice.AFTER_CARE -> DeparturePage.CARE_FIRST
                                 DepartureChoice.STOP_ON_WAY -> DeparturePage.STOPS
-                            }) }, { open(DeparturePage.CHECKLIST) }, { open(DeparturePage.RECORDS) }, actions::recordCare, actions::undoCare,
+                            }) }, { open(DeparturePage.RECORDS) }, actions::recordCare, actions::undoCare,
                                 actions::toggleItem) { CryResponseEntry(state, actions) }
                             DeparturePage.CHECKLIST -> PackingChecklist(state, actions, { open(DeparturePage.PACKING) }, { open(DeparturePage.ADD_ITEM) })
                             DeparturePage.PACKING -> state.preparation.record?.let { record -> PackingSettingsScreen(record, state.preparation.canWrite) { settings ->
@@ -251,13 +256,13 @@ fun DepartureApp(
 }
 
 @Composable
-private fun DepartureHeader(state: DepartureUiState, page: DeparturePage, restricted: Boolean, responding: Boolean, onBack: () -> Unit, onTools: () -> Unit) {
+private fun DepartureHeader(state: DepartureUiState, page: DeparturePage, restricted: Boolean, responding: Boolean, showBack: Boolean, onBack: () -> Unit, onTools: () -> Unit) {
     val dimens = PleosTheme.dimens
     val type = PleosTheme.typography
     val profile = state.care.record?.profile
     val ux = LocalUxRestrictions.current
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(dimens.itemSpacing), verticalAlignment = Alignment.CenterVertically) {
-        if (responding || (!restricted && page != DeparturePage.HOME)) CareButton(stringResource(R.string.care_back), onBack, Modifier.width(dimens.headerBackWidth), primary = false)
+        if (showBack) CareButton(stringResource(R.string.care_back), onBack, Modifier.widthIn(min = dimens.headerBackWidth), primary = false, leadingIcon = CareSymbol.BACK)
         Column(Modifier.weight(1f)) {
             DepartureText(stringResource(if (responding) R.string.response_title else when (page) {
                 DeparturePage.HOME -> R.string.ux_home_title
@@ -315,6 +320,8 @@ private fun DrivingDeparture(state: DepartureUiState) {
     val forecast = state.evaluation?.forecast
     val ux = LocalUxRestrictions.current
     CareCard(stringResource(R.string.departure_driving_title)) {
+        // 주행 중에도 예보 단계(여유·주의·임박)를 글자 배지로 한눈에 보인다.
+        forecast?.stage?.toForecastLevel()?.let { ForecastBadge(it) }
         DepartureText(stringResource(if (forecast?.journey?.careBeforeArrival?.isNotEmpty() == true) R.string.departure_driving_stop else R.string.departure_driving_check),
             style = type.titleLarge)
         val feed = forecast?.needs?.firstOrNull { it.need == CareNeed.FEED }
@@ -322,12 +329,12 @@ private fun DrivingDeparture(state: DepartureUiState) {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(dimens.microSpacing)) {
                 CareGlyph(CareSymbol.ROUTE)
                 DepartureText(stringResource(R.string.departure_arrival), secondary = true)
-                DepartureText(timeText(forecast?.journey?.estimatedArrivalAtEpochMillis), style = type.titleSmall)
+                DepartureText(timeText(forecast?.journey?.estimatedArrivalAtEpochMillis), style = type.titleLarge)
             }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(dimens.microSpacing)) {
                 CareGlyph(CareSymbol.FEED)
                 DepartureText(stringResource(R.string.departure_next_feed), secondary = true)
-                DepartureText(estimateText(feed?.estimate), style = type.titleSmall)
+                DepartureText(estimateText(feed?.estimate), style = type.titleLarge)
             }
         }
         DepartureText(stringResource(if (ux.source == UxRestrictionsState.Source.CAR_SERVICE) R.string.departure_driving_setup

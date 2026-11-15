@@ -15,17 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.hmgchallenge.app.R
-import com.hmgchallenge.app.care.CareButton
 import com.hmgchallenge.app.care.CareActionTile
+import com.hmgchallenge.app.care.CareButton
 import com.hmgchallenge.app.care.CareCard
+import com.hmgchallenge.app.driving.LocalUxRestrictions
+import com.hmgchallenge.app.ui.components.CareSymbol
 import com.hmgchallenge.app.ui.theme.PleosAccentTone
 import com.hmgchallenge.app.ui.theme.PleosRoles.accentColor
 import com.hmgchallenge.app.ui.theme.PleosTheme
-import com.hmgchallenge.app.ui.components.CareSymbol
 import com.hmgchallenge.shared.care.CareEventType
 import com.hmgchallenge.shared.care.CareJournal
-import com.hmgchallenge.shared.facility.StopPlanType
 import com.hmgchallenge.shared.facility.StopCandidate
+import com.hmgchallenge.shared.facility.StopPlanType
 import com.hmgchallenge.shared.forecast.CareNeed
 import com.hmgchallenge.shared.forecast.ForecastReasonCode
 import com.hmgchallenge.shared.forecast.ForecastStage
@@ -54,8 +55,10 @@ internal fun CryResponseEntry(state: DepartureUiState, actions: DepartureControl
             ResponseNotice.CANCELLED -> DepartureText(stringResource(R.string.response_cancelled), secondary = true)
             else -> Unit
         }
+        // 주행 중에는 화면에서 거의 유일한 조작이라 진하고 큰 주요 버튼으로 바로 눈에 띄게 한다(기획 F4 "큰 버튼 1탭").
+        val driving = LocalUxRestrictions.current.requiresDistractionOptimization
         CareActionTile(stringResource(R.string.response_start), stringResource(R.string.ux_response_entry_detail), CareSymbol.SOOTHE,
-            actions::startResponse, Modifier.fillMaxWidth(), tag = "response-start")
+            actions::startResponse, Modifier.fillMaxWidth(), tag = "response-start", primary = driving, large = driving)
     }
 }
 
@@ -88,7 +91,8 @@ internal fun CryResponseScreen(
                 else -> R.string.response_unknown_short
             }), maxLines = 1)
         }
-        if (assessment?.careBeforeArrival == true) DepartureText(stringResource(R.string.response_before_arrival))
+        // 주행 중에는 핵심 한 줄 + "주차 후 확인" 안내만 남긴다(기획 F4 "주행 중에는 최소 정보 한 줄"). 도착 전 겹침 설명은 정차 후에 보인다.
+        if (!restricted && assessment?.careBeforeArrival == true) DepartureText(stringResource(R.string.response_before_arrival))
         if (!restricted) DepartureText(stringResource(R.string.departure_arrival) + " · " + timeText(assessment?.arrivalAtEpochMillis))
         else DepartureText(stringResource(R.string.response_park_for_details), secondary = true)
     }
